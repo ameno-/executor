@@ -1,0 +1,14 @@
+# Install: cp to ~/.config/systemd/user/ ; systemctl --user daemon-reload
+# NOT enabled or started until the owner provides the tunnel token (README).
+[Unit]
+Description=Cloudflare Tunnel for self-hosted Executor
+After=network-online.target
+
+[Service]
+ExecStart=%h/dev/executor/deploy/ai-lab/cloudflared-run.sh
+Restart=on-failure
+RestartPreventExitStatus=78
+RestartSec=5
+
+[Install]
+WantedBy=default.target
