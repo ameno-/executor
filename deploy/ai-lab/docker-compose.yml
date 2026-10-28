@@ -15,6 +15,10 @@ services:
     user: "${EXECUTOR_UID:-1000}:${EXECUTOR_GID:-1000}"
     ports:
       - "127.0.0.1:4788:4788"
+    # nasir-executor carries only this container and nasir-live's gateway (ameno-/nasir deploy/up.sh creates it,
+    # labelled nasir.purpose=executor-gateway), so the Nasir MCP source reaches http://nasir-live-gateway-1:6580/mcp.
+    # Calling a docker-network host also needs EXECUTOR_ALLOW_LOCAL_NETWORK=true in the env file.
+    networks: [default, nasir-executor]
     env_file:
       - ${EXECUTOR_ENV_FILE:-${HOME}/.config/executor-selfhost/env}
     volumes:
@@ -25,3 +29,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 20s
+
+networks:
+  nasir-executor:
+    external: true
